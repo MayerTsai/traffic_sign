@@ -16,8 +16,8 @@ ptr_traffic_sign_t create_traffic_sign(ptr_traffic_light_t light,
   traffic_sign->green_interval = green_time;
   traffic_sign->red_interval = red_time;
   traffic_sign->current_color = color;
-  set_traffic_light_state(traffic_sign->light, color == GREEN_SIGN ? GREEN : RED);
   traffic_sign->last_change_time = current_time;
+  set_traffic_light_state(traffic_sign->light, color == GREEN_SIGN ? GREEN : RED);
   return traffic_sign;
 }
 
