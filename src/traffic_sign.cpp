@@ -30,7 +30,8 @@ void destroy_traffic_sign(ptr_traffic_sign_t traffic_sign)
   }
 }
 
-void update_traffic_sign(ptr_traffic_sign_t traffic_sign, unsigned long current_time)
+void update_traffic_sign(ptr_traffic_sign_t traffic_sign,
+                         unsigned long current_time)
 {
   unsigned long time_in_state = current_time - traffic_sign->last_change_time;
 
