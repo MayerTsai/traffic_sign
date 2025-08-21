@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "../../../../projects/platformIO/SevenSegmentLed"
+		},
+		{
+			"name": "traffic_sign",
+			"path": "."
+		}
+	],
+	"settings": {}
+}
