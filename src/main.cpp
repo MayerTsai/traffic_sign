@@ -54,6 +54,7 @@ void setup()
                                        LED_B_RED_INTERVAL,
                                        RED_STATE,
                                        (long)current_time - LED_B_compensation);
+#ifdef DEBUG
   Serial.begin(9600);
   Serial.print("A's green interval: ");
   Serial.print(traffic_sign_A->green_interval);
@@ -61,13 +62,13 @@ void setup()
   Serial.print(traffic_sign_A->yellow_interval);
   Serial.print("    A's red interval: ");
   Serial.println(traffic_sign_A->red_interval);
-
   Serial.print("B's green interval: ");
   Serial.print(traffic_sign_B->green_interval);
   Serial.print("    B's yellow interval: ");
   Serial.print(traffic_sign_B->yellow_interval);
   Serial.print("    B's red interval: ");
   Serial.println(traffic_sign_B->red_interval);
+#endif
 }
 
 void loop()
@@ -76,7 +77,12 @@ void loop()
   // Serial.println(current_time);
   update_traffic_sign(traffic_sign_A, current_time);
   update_traffic_sign(traffic_sign_B, current_time);
+
+#ifdef DEBUG
+  Serial.print("A: ");
   Serial.print(traffic_sign_A->current_state);
-  Serial.print("      ");
+  Serial.print("||");
+  Serial.print("B: ");
   Serial.println(traffic_sign_B->current_state);
+#endif
 }
