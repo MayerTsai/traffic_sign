@@ -12,17 +12,17 @@ const int LIGHT_B_RED_PIN = 7;
 
 // Define timing intervals for the traffic light cycle
 
-const unsigned long PERIOD_INTERVAL = 10000;
-const unsigned long YELLOW_INTERVAL = 1000;
+const long PERIOD_INTERVAL = 10000;
+const long YELLOW_INTERVAL = 1000;
 
-const unsigned long LED_A_YELLOW_INTERVAL = YELLOW_INTERVAL;
-const unsigned long LED_A_GREEN_INTERVAL = 5000;
-const unsigned long LED_A_RED_INTERVAL = PERIOD_INTERVAL - LED_A_GREEN_INTERVAL - LED_A_YELLOW_INTERVAL;
+const long LED_A_YELLOW_INTERVAL = YELLOW_INTERVAL;
+const long LED_A_GREEN_INTERVAL = 5000;
+const long LED_A_RED_INTERVAL = PERIOD_INTERVAL - LED_A_GREEN_INTERVAL - LED_A_YELLOW_INTERVAL;
 
-const unsigned long LED_B_YELLOW_INTERVAL = YELLOW_INTERVAL;
-const unsigned long LED_B_GREEN_INTERVAL = LED_A_RED_INTERVAL - LED_B_YELLOW_INTERVAL;
-const unsigned long LED_B_RED_INTERVAL = PERIOD_INTERVAL - LED_B_GREEN_INTERVAL - LED_B_YELLOW_INTERVAL;
-const unsigned long LED_B_compensation = LED_A_RED_INTERVAL - LED_B_GREEN_INTERVAL - LED_B_YELLOW_INTERVAL;
+const long LED_B_YELLOW_INTERVAL = YELLOW_INTERVAL;
+const long LED_B_GREEN_INTERVAL = LED_A_RED_INTERVAL - LED_B_YELLOW_INTERVAL;
+const long LED_B_RED_INTERVAL = PERIOD_INTERVAL - LED_B_GREEN_INTERVAL - LED_B_YELLOW_INTERVAL;
+const long LED_B_compensation = LED_A_RED_INTERVAL - LED_B_GREEN_INTERVAL - LED_B_YELLOW_INTERVAL;
 
 // Global pointers to our traffic objects. Initialize to NULL.
 ptr_traffic_light_t light_led_A = NULL;
@@ -46,19 +46,37 @@ void setup()
                                        LED_A_YELLOW_INTERVAL,
                                        LED_A_RED_INTERVAL,
                                        GREEN_STATE,
-                                       current_time);
+                                       (long)current_time);
 
   traffic_sign_B = create_traffic_sign(light_led_B,
-                                       LED_B_RED_INTERVAL,
-                                       LED_B_YELLOW_INTERVAL,
                                        LED_B_GREEN_INTERVAL,
+                                       LED_B_YELLOW_INTERVAL,
+                                       LED_B_RED_INTERVAL,
                                        RED_STATE,
-                                       current_time - LED_B_compensation);
+                                       (long)current_time - LED_B_compensation);
+  Serial.begin(9600);
+  Serial.print("A's green interval: ");
+  Serial.print(traffic_sign_A->green_interval);
+  Serial.print("    A's yellow interval: ");
+  Serial.print(traffic_sign_A->yellow_interval);
+  Serial.print("    A's red interval: ");
+  Serial.println(traffic_sign_A->red_interval);
+
+  Serial.print("B's green interval: ");
+  Serial.print(traffic_sign_B->green_interval);
+  Serial.print("    B's yellow interval: ");
+  Serial.print(traffic_sign_B->yellow_interval);
+  Serial.print("    B's red interval: ");
+  Serial.println(traffic_sign_B->red_interval);
 }
 
 void loop()
 {
   unsigned long current_time = millis();
+  // Serial.println(current_time);
   update_traffic_sign(traffic_sign_A, current_time);
   update_traffic_sign(traffic_sign_B, current_time);
+  Serial.print(traffic_sign_A->current_state);
+  Serial.print("      ");
+  Serial.println(traffic_sign_B->current_state);
 }

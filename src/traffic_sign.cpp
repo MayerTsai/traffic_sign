@@ -2,11 +2,11 @@
 #include <Arduino.h>
 
 ptr_traffic_sign_t create_traffic_sign(ptr_traffic_light_t light,
-                                       unsigned long green_time,
-                                       unsigned long yellow_time,
-                                       unsigned long red_time,
+                                       long green_time,
+                                       long yellow_time,
+                                       long red_time,
                                        traffic_light_state_t initial_state,
-                                       unsigned long current_time)
+                                       long current_time)
 {
   ptr_traffic_sign_t traffic_sign = (ptr_traffic_sign_t)malloc(sizeof(traffic_sign_t));
   if (traffic_sign == NULL)
@@ -31,9 +31,9 @@ void destroy_traffic_sign(ptr_traffic_sign_t traffic_sign)
 }
 
 void update_traffic_sign(ptr_traffic_sign_t traffic_sign,
-                         unsigned long current_time)
+                         long current_time)
 {
-  unsigned long time_in_state = current_time - traffic_sign->last_change_time;
+  long time_in_state = current_time - traffic_sign->last_change_time;
 
   switch (traffic_sign->current_state)
   {
