@@ -14,7 +14,7 @@ ptr_traffic_light_t create_traffic_light(int green_pin, int yellow_pin, int red_
   light->green_pin = green_pin;
   light->yellow_pin = yellow_pin;
   light->red_pin = red_pin;
-  set_traffic_light_state(light, YELLOW_STATE);
+  set_traffic_light_state(light, RED_STATE);
   return light;
 }
 
