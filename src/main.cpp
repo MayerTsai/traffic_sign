@@ -107,6 +107,7 @@ void loop()
   update_traffic_sign(traffic_sign_C, current_time);
 
 #ifdef DEBUG
+  Serial.println();
   Serial.print("A: ");
   Serial.print(traffic_sign_A->current_state);
   Serial.print("||");
