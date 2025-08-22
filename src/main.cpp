@@ -18,10 +18,10 @@ const unsigned long LED_A_GREEN_INTERVAL = 5000;
 const unsigned long LED_A_YELLOW_INTERVAL = 1000;
 const unsigned long LED_A_RED_INTERVAL = PERIOD_INTERVAL - LED_A_GREEN_INTERVAL - LED_A_YELLOW_INTERVAL;
 
-const unsigned long LED_B_GREEN_INTERVAL = 2000;
+const unsigned long LED_B_GREEN_INTERVAL = 3000;
 const unsigned long LED_B_YELLOW_INTERVAL = 1000;
 const unsigned long LED_B_RED_INTERVAL = PERIOD_INTERVAL - LED_B_GREEN_INTERVAL - LED_B_YELLOW_INTERVAL;
-const unsigned long compensation = LED_A_RED_INTERVAL - LED_B_GREEN_INTERVAL - LED_B_YELLOW_INTERVAL;
+const unsigned long LED_B_compensation = LED_A_RED_INTERVAL - LED_B_GREEN_INTERVAL - LED_B_YELLOW_INTERVAL;
 
 // Global pointers to our traffic objects. Initialize to NULL.
 ptr_traffic_light_t light_led_A = NULL;
@@ -52,7 +52,7 @@ void setup()
                                        LED_B_YELLOW_INTERVAL,
                                        LED_B_GREEN_INTERVAL,
                                        RED_STATE,
-                                       current_time - compensation);
+                                       current_time - LED_B_compensation);
 }
 
 void loop()
