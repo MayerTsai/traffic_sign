@@ -2,10 +2,10 @@
 #include <Arduino.h>
 
 ptr_traffic_sign_t create_traffic_sign(ptr_traffic_light_t light,
-                                       unsigned long delay_time,
                                        unsigned long green_time,
+                                       unsigned long yellow_time,
                                        unsigned long red_time,
-                                       traffic_sign_state_t initial_sign_state,
+                                       traffic_light_state_t initial_state,
                                        unsigned long current_time)
 {
   ptr_traffic_sign_t traffic_sign = (ptr_traffic_sign_t)malloc(sizeof(traffic_sign_t));
@@ -13,11 +13,11 @@ ptr_traffic_sign_t create_traffic_sign(ptr_traffic_light_t light,
     return NULL;
   traffic_sign->light = light;
   traffic_sign->green_interval = green_time;
-  traffic_sign->delay_interval = delay_time;
+  traffic_sign->yellow_interval = yellow_time;
   traffic_sign->red_interval = red_time;
-  traffic_sign->current_sign_state = initial_sign_state;
+  traffic_sign->current_state = initial_state;
   traffic_sign->last_change_time = current_time;
-  set_traffic_light_state(traffic_sign->light, initial_sign_state == GREEN_SIGN ? GREEN_STATE : RED_STATE);
+  set_traffic_light_state(traffic_sign->light, initial_state == GREEN_STATE ? GREEN_STATE : RED_STATE);
   return traffic_sign;
 }
 
@@ -35,22 +35,28 @@ void update_traffic_sign(ptr_traffic_sign_t traffic_sign,
 {
   unsigned long time_in_state = current_time - traffic_sign->last_change_time;
 
-  switch (traffic_sign->current_sign_state)
+  switch (traffic_sign->current_state)
   {
-  case GREEN_SIGN:
+  case GREEN_STATE:
     if (time_in_state >= traffic_sign->green_interval)
     {
-      traffic_sign->current_sign_state = RED_SIGN;
+      traffic_sign->current_state = YELLOW_STATE;
       traffic_sign->last_change_time = current_time;
       set_traffic_light_state(traffic_sign->light, YELLOW_STATE);
-      delay(traffic_sign->delay_interval);
+    }
+    break;
+  case YELLOW_STATE:
+    if (time_in_state >= traffic_sign->yellow_interval)
+    {
+      traffic_sign->current_state = RED_STATE;
+      traffic_sign->last_change_time = current_time;
       set_traffic_light_state(traffic_sign->light, RED_STATE);
     }
     break;
-  case RED_SIGN:
+  case RED_STATE:
     if (time_in_state >= traffic_sign->red_interval)
     {
-      traffic_sign->current_sign_state = GREEN_SIGN;
+      traffic_sign->current_state = GREEN_STATE;
       traffic_sign->last_change_time = current_time;
       set_traffic_light_state(traffic_sign->light, GREEN_STATE);
     }
