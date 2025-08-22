@@ -95,7 +95,7 @@ void setup()
   Serial.print(traffic_sign_C->yellow_interval);
   Serial.print("    C's red interval: ");
   Serial.println(traffic_sign_C->red_interval);
-#endif
+#endif // DEBUG
 }
 
 void loop()
@@ -116,5 +116,5 @@ void loop()
   Serial.print("C: ");
   Serial.print(traffic_sign_C->current_state);
   Serial.println();
-#endif
+#endif // DEBUG
 }
