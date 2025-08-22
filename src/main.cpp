@@ -10,31 +10,43 @@ const int LIGHT_B_GREEN_PIN = 5;
 const int LIGHT_B_YELLOW_PIN = 6;
 const int LIGHT_B_RED_PIN = 7;
 
+const int LIGHT_C_GREEN_PIN = 8;
+const int LIGHT_C_YELLOW_PIN = 9;
+const int LIGHT_C_RED_PIN = 10;
+
 // Define timing intervals for the traffic light cycle
 
-const long PERIOD_INTERVAL = 10000;
-const long YELLOW_INTERVAL = 1000;
-
-const long LED_A_YELLOW_INTERVAL = YELLOW_INTERVAL;
 const long LED_A_GREEN_INTERVAL = 5000;
+const long LED_A_YELLOW_INTERVAL = 1000;
+const long LED_B_GREEN_INTERVAL = 3000;
+const long LED_B_YELLOW_INTERVAL = 1000;
+const long LED_C_GREEN_INTERVAL = 2000;
+const long LED_C_YELLOW_INTERVAL = 1000;
+const long PERIOD_INTERVAL = LED_A_GREEN_INTERVAL + LED_A_YELLOW_INTERVAL +
+                             LED_B_GREEN_INTERVAL + LED_B_YELLOW_INTERVAL +
+                             LED_C_GREEN_INTERVAL + LED_C_YELLOW_INTERVAL;
 const long LED_A_RED_INTERVAL = PERIOD_INTERVAL - LED_A_GREEN_INTERVAL - LED_A_YELLOW_INTERVAL;
-
-const long LED_B_YELLOW_INTERVAL = YELLOW_INTERVAL;
-const long LED_B_GREEN_INTERVAL = LED_A_RED_INTERVAL - LED_B_YELLOW_INTERVAL;
 const long LED_B_RED_INTERVAL = PERIOD_INTERVAL - LED_B_GREEN_INTERVAL - LED_B_YELLOW_INTERVAL;
+const long LED_C_RED_INTERVAL = PERIOD_INTERVAL - LED_C_GREEN_INTERVAL - LED_C_YELLOW_INTERVAL;
+
 const long LED_B_compensation = LED_A_RED_INTERVAL - LED_B_GREEN_INTERVAL - LED_B_YELLOW_INTERVAL;
+const long LED_C_compensation = LED_B_compensation - LED_C_GREEN_INTERVAL - LED_C_YELLOW_INTERVAL;
 
 // Global pointers to our traffic objects. Initialize to NULL.
 ptr_traffic_light_t light_led_A = NULL;
 ptr_traffic_light_t light_led_B = NULL;
+ptr_traffic_light_t light_led_C = NULL;
+
 ptr_traffic_sign_t traffic_sign_A = NULL;
 ptr_traffic_sign_t traffic_sign_B = NULL;
+ptr_traffic_sign_t traffic_sign_C = NULL;
 
 void setup()
 {
   // Create the traffic light hardware representations
   light_led_A = create_traffic_light(LIGHT_A_GREEN_PIN, LIGHT_A_YELLOW_PIN, LIGHT_A_RED_PIN);
   light_led_B = create_traffic_light(LIGHT_B_GREEN_PIN, LIGHT_B_YELLOW_PIN, LIGHT_B_RED_PIN);
+  light_led_C = create_traffic_light(LIGHT_C_GREEN_PIN, LIGHT_C_YELLOW_PIN, LIGHT_C_RED_PIN);
 
   // Get the initial time
   unsigned long current_time = millis();
@@ -54,8 +66,17 @@ void setup()
                                        LED_B_RED_INTERVAL,
                                        RED_STATE,
                                        (long)current_time - LED_B_compensation);
+
+  traffic_sign_C = create_traffic_sign(light_led_C,
+                                       LED_C_GREEN_INTERVAL,
+                                       LED_C_YELLOW_INTERVAL,
+                                       LED_C_RED_INTERVAL,
+                                       RED_STATE,
+                                       (long)current_time - LED_C_compensation);
+
 #ifdef DEBUG
   Serial.begin(9600);
+  Serial.println();
   Serial.print("A's green interval: ");
   Serial.print(traffic_sign_A->green_interval);
   Serial.print("    A's yellow interval: ");
@@ -68,6 +89,12 @@ void setup()
   Serial.print(traffic_sign_B->yellow_interval);
   Serial.print("    B's red interval: ");
   Serial.println(traffic_sign_B->red_interval);
+  Serial.print("C's green interval: ");
+  Serial.print(traffic_sign_C->green_interval);
+  Serial.print("    C's yellow interval: ");
+  Serial.print(traffic_sign_C->yellow_interval);
+  Serial.print("    C's red interval: ");
+  Serial.println(traffic_sign_C->red_interval);
 #endif
 }
 
@@ -77,12 +104,17 @@ void loop()
   // Serial.println(current_time);
   update_traffic_sign(traffic_sign_A, current_time);
   update_traffic_sign(traffic_sign_B, current_time);
+  update_traffic_sign(traffic_sign_C, current_time);
 
 #ifdef DEBUG
   Serial.print("A: ");
   Serial.print(traffic_sign_A->current_state);
   Serial.print("||");
   Serial.print("B: ");
-  Serial.println(traffic_sign_B->current_state);
+  Serial.print(traffic_sign_B->current_state);
+  Serial.print("||");
+  Serial.print("C: ");
+  Serial.print(traffic_sign_C->current_state);
+  Serial.println();
 #endif
 }
